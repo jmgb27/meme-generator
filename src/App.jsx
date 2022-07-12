@@ -18,11 +18,12 @@ function App() {
     const [memeData, setMemeData] = useState();
 
     useEffect(() => {
-        fetch("https://api.imgflip.com/get_memes")
-            .then((parse) => parse.json())
-            .then((x) => {
-                setMemeData(x.data.memes);
-            });
+        async function getMemes() {
+            const res = await fetch("https://api.imgflip.com/get_memes");
+            const data = await res.json();
+            setMemeData(data.data.memes);
+        }
+        getMemes();
     }, []);
 
     function generateImage() {
