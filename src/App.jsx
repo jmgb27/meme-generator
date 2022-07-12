@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Header from "./components/Header";
 import Form from "./components/Form";
-import Memes from "./memesData";
+
 let newArr = [];
 function App() {
     const [text, setText] = useState({
@@ -15,13 +15,24 @@ function App() {
         });
     }
 
+    const [memeData, setMemeData] = useState();
+
+    useEffect(() => {
+        fetch("https://api.imgflip.com/get_memes")
+            .then((parse) => parse.json())
+            .then((x) => {
+                setMemeData(x.data.memes);
+            });
+    }, []);
+
     function generateImage() {
-        newArr = Memes.data.memes.filter((x) => {
+        newArr = memeData.filter((x) => {
             return x.box_count === 2;
         });
-        setRand(Math.floor(Math.random() * newArr.length));
+        setRand(Math.floor(Math.random() * memeData.length));
         setShowImage(true);
     }
+
     const [rand, setRand] = useState(0);
     const [showImage, setShowImage] = useState(false);
     return (
@@ -39,7 +50,7 @@ function App() {
                     <div className="relative">
                         <img
                             className="w-[100%] m-auto"
-                            src={newArr[rand].url}
+                            src={memeData[rand].url}
                         />
 
                         <p className="meme--text top-0">{text.topText}</p>
